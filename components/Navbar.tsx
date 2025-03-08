@@ -40,7 +40,7 @@ function NavBar() {
     setAnchorElUser(null);
   };
 
-  const handleRouteChange = (page: string) => {
+  const handleRouteChange = () => {
     redirect("/");
   };
 
