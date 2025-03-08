@@ -4,12 +4,14 @@ import { Url } from "@/models/Url";
 
 export async function GET(
   req: Request,
-  { params }: { params: { shortUrl: string } }
+  { params }: { params: Record<string, string | string[]> }
 ) {
   try {
     await connectToDB();
 
-    const { shortUrl } = params;
+    const shortUrl = Array.isArray(params.shortUrl)
+      ? params.shortUrl[0]
+      : params.shortUrl;
 
     if (!shortUrl) {
       return NextResponse.json(
@@ -28,10 +30,10 @@ export async function GET(
     }
 
     let destinationUrl = urlDoc.originalUrl;
-
     if (!destinationUrl.startsWith("http")) {
       destinationUrl = `https://${destinationUrl}`;
     }
+
     return NextResponse.json({ data: destinationUrl });
   } catch (error) {
     return NextResponse.json(
