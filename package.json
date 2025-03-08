@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "preinstall": "pnpm install --no-frozen-lockfile",
-    "build": "next build",
+    "build": "pnpm install --no-frozen-lockfile && next build",
     "start": "next start",
     "lint": "next lint"
   },
