@@ -30,6 +30,7 @@ export async function POST(req: Request) {
       {
         message: "Short URL created",
         shortUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/${shortCode}`,
+        statusCode: 201,
       },
       { status: 201 }
     );
