@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { connectToDB } from "@/lib/mongodb";
 import { Url } from "@/models/Url";
-import { nanoid } from "nanoid"; 
+import { nanoid } from "nanoid";
 
 export async function POST(req: Request) {
   try {
     await connectToDB();
-    const { originalUrl } = await req.json(); 
+    const { originalUrl } = await req.json();
 
     if (!originalUrl) {
       return NextResponse.json(
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     let existingUrl = await Url.findOne({ shortUrl: shortCode });
 
     while (existingUrl) {
-      shortCode = nanoid(6); 
+      shortCode = nanoid(6);
       existingUrl = await Url.findOne({ shortUrl: shortCode });
     }
     const newUrl = new Url({ originalUrl, shortUrl: shortCode });
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         message: "Short URL created",
-        shortUrl: `https://w2mmgl-3001.csb.app/${shortCode}`,
+        shortUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/${shortCode}`,
       },
       { status: 201 }
     );

@@ -4,12 +4,12 @@ import { Url } from "@/models/Url";
 
 export async function GET(
   req: Request,
-  context: { params: Promise<{ shortUrl: string }> }
+  { params }: { params: { shortUrl: string } }
 ) {
   try {
     await connectToDB();
 
-    const { shortUrl } = await context.params;
+    const { shortUrl } = params;
 
     if (!shortUrl) {
       return NextResponse.json(
@@ -29,14 +29,10 @@ export async function GET(
 
     let destinationUrl = urlDoc.originalUrl;
 
-    if (
-      !destinationUrl.startsWith("http://") &&
-      !destinationUrl.startsWith("https://")
-    ) {
+    if (!destinationUrl.startsWith("http")) {
       destinationUrl = `https://${destinationUrl}`;
     }
-
-    return NextResponse.redirect(destinationUrl, 301);
+    return NextResponse.json({ data: destinationUrl });
   } catch (error: any) {
     return NextResponse.json(
       { message: "Server error", error: error.message },

@@ -1,3 +1,4 @@
+import MediaCard from "@/components/Card";
 import Image from "next/image";
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
         audience and connect them to the right information. Build, edit, and
         track everything inside the shortly Connections Platform.
       </div>
+      <MediaCard />
     </div>
   );
 }
