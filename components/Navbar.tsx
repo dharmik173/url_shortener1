@@ -16,8 +16,9 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useState } from "react";
+import { redirect } from "next/navigation";
 
-const pages = ["Home", "About"];
+const pages = ["Home"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function NavBar() {
@@ -39,6 +40,10 @@ function NavBar() {
     setAnchorElUser(null);
   };
 
+  const handleRouteChange = (page: string) => {
+    redirect("/");
+  };
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl" className="bg-black">
@@ -48,7 +53,7 @@ function NavBar() {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -90,7 +95,7 @@ function NavBar() {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={() => handleRouteChange(page)}>
                   <Typography sx={{ textAlign: "center" }}>{page}</Typography>
                 </MenuItem>
               ))}
@@ -101,7 +106,7 @@ function NavBar() {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -119,7 +124,7 @@ function NavBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => handleRouteChange(page)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
