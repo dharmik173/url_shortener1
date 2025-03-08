@@ -6,23 +6,29 @@ import TextField from "@mui/material/TextField";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useState } from "react";
 
+interface ResponseDataType {
+  shortUrl: string;
+}
+
 const UrlInput = () => {
   const urlRegex = /^(https?:\/\/)?[\w-]{2,}\.[\w-]{2,}.*$/;
 
   const [urlValue, setUrlValue] = useState<string>("");
-  const [responseData, setResponseData] = useState<any>([]);
+  const [responseData, setResponseData] = useState<ResponseDataType | string>(
+    ""
+  );
   const [btndisabled, setbtnDisabled] = useState<boolean>(true);
 
-  const handleOnChange = (e: any) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isValidUrl = (url: string) => urlRegex.test(url);
     if (isValidUrl(e.target.value)) {
       setbtnDisabled(false);
       setUrlValue(e.target.value);
-      setResponseData([]);
+      setResponseData("");
     } else {
       setbtnDisabled(true);
       setUrlValue(e.target.value);
-      setResponseData([]);
+      setResponseData("");
     }
   };
 
@@ -41,7 +47,7 @@ const UrlInput = () => {
       const data = await res.json();
       if (data && data.statusCode === 201) {
         setUrlValue("");
-        setResponseData(data);
+        setResponseData(data?.shortUrl);
         setbtnDisabled(true);
       }
     } catch (error) {
@@ -79,16 +85,28 @@ const UrlInput = () => {
           Get your link for free
         </Button>
       </CardActions>
-      {responseData?.shortUrl && (
+      {responseData && (
         <div
-          onClick={() => navigator.clipboard.writeText(responseData.shortUrl)}
+          onClick={() => {
+            const textToCopy =
+              typeof responseData === "string"
+                ? responseData
+                : responseData.shortUrl;
+            if (textToCopy) navigator.clipboard.writeText(textToCopy);
+          }}
           className="cursor-pointer flex items-center gap-2 bg-gray-100 p-2 rounded-lg shadow-sm hover:shadow-md transition-shadow mt-4 justify-between"
         >
           <div
             className="truncate max-w-[200px] sm:max-w-[300px] md:max-w-[400px] "
-            title={responseData.shortUrl}
+            title={
+              typeof responseData === "string"
+                ? responseData
+                : responseData?.shortUrl
+            }
           >
-            {responseData.shortUrl}
+            {typeof responseData === "string"
+              ? responseData
+              : responseData?.shortUrl}
           </div>
           <ContentCopyIcon className="text-gray-500 hover:text-black" />
         </div>

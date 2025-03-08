@@ -33,9 +33,9 @@ export async function GET(
       destinationUrl = `https://${destinationUrl}`;
     }
     return NextResponse.json({ data: destinationUrl });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { message: "Server error", error: error.message },
+      { message: "Server error", error: (error as Error).message },
       { status: 500 }
     );
   }
