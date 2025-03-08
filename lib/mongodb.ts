@@ -5,9 +5,14 @@ interface Cached {
   promise: Promise<Connection> | null;
 }
 
-let cached: Cached = (global as any).mongoose || { conn: null, promise: null };
+const globalWithMongoose = global as unknown as { mongoose?: Cached };
 
-export async function connectToDB() {
+const cached: Cached = globalWithMongoose.mongoose || {
+  conn: null,
+  promise: null,
+};
+
+export async function connectToDB(): Promise<Connection> {
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
@@ -20,7 +25,7 @@ export async function connectToDB() {
   }
 
   cached.conn = await cached.promise;
-  (global as any).mongoose = cached;
+  globalWithMongoose.mongoose = cached;
 
   return cached.conn;
 }
