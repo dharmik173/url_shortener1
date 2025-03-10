@@ -23,7 +23,11 @@ export async function POST(req: Request) {
       shortCode = nanoid(6);
       existingUrl = await Url.findOne({ shortUrl: shortCode });
     }
-    const newUrl = new Url({ originalUrl, shortUrl: shortCode });
+    const newUrl = new Url({
+      originalUrl,
+      shortUrl: shortCode,
+      userId: "", // need to handle dynamically
+    });
     await newUrl.save();
 
     return NextResponse.json(
