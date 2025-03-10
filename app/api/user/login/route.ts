@@ -11,6 +11,7 @@ export async function POST(req: Request) {
   try {
     await connectToDB();
     const cookieStore = await cookies();
+    const secret = process.env.JWT_SECRET || "";
     const { email, password } = await req.json();
 
     const validation = validateUserInput(email, password);
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
       {
         data: findUser,
       },
-      process.env.JWT_SECRET,
+      secret,
       { expiresIn: "7d" }
     );
 
