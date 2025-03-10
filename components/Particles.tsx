@@ -247,7 +247,10 @@ const Particles: React.FC<ParticlesProps> = ({
   ]);
 
   return (
-    <div ref={containerRef} className={`relative w-full h-full ${className}`} />
+    <div
+      ref={containerRef}
+      className="absolute top-0 left-0 w-full h-full overflow-hidden"
+    />
   );
 };
 
