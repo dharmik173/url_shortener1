@@ -1,11 +1,19 @@
 import { NextResponse } from "next/server";
+import { nanoid } from "nanoid";
+
 import { connectToDB } from "@/lib/mongodb";
 import { Url } from "@/models/Url";
-import { nanoid } from "nanoid";
+import { getUserFromToken } from "@/utils/common/getUserFromToken";
 
 export async function POST(req: Request) {
   try {
     await connectToDB();
+    const { user, error, status } = await getUserFromToken();
+
+    if (error) {
+      return NextResponse.json({ message: error }, { status });
+    }
+
     const { originalUrl } = await req.json();
 
     if (!originalUrl) {
@@ -23,7 +31,11 @@ export async function POST(req: Request) {
       shortCode = nanoid(6);
       existingUrl = await Url.findOne({ shortUrl: shortCode });
     }
-    const newUrl = new Url({ originalUrl, shortUrl: shortCode });
+    const newUrl = new Url({
+      originalUrl,
+      shortUrl: shortCode,
+      userId: user?.data?._id,
+    });
     await newUrl.save();
 
     return NextResponse.json(

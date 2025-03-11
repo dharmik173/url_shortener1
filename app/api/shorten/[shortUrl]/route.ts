@@ -31,7 +31,8 @@ export async function GET(
         { status: 404 }
       );
     }
-
+    urlDoc.clickCount += 1;
+    await urlDoc.save();
     // Ensure the destination URL has a valid protocol
     let destinationUrl = urlDoc.originalUrl;
     if (
