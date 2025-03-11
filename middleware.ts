@@ -9,6 +9,10 @@ export async function middleware(req: NextRequest) {
   }
 
   const shortUrl = url.pathname.slice(1);
+  const reservedRoutes = ["login", "dashboard", "signup"];
+  if (reservedRoutes.includes(shortUrl)) {
+      return NextResponse.next();
+  }
   if (!shortUrl) return NextResponse.next();
 
   const response = await fetch(
