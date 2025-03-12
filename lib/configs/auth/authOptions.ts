@@ -63,11 +63,8 @@ export const authOptions:AuthOptions  = {
       session.user = token.user as Session["user"];
       return session;
     },
-    async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
-      if (url.startsWith(baseUrl)) {
-        return url;
-      }
-      return baseUrl; 
+    async redirect({ baseUrl }: { baseUrl: string }) {
+      return baseUrl;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
