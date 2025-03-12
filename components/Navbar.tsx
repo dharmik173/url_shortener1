@@ -17,11 +17,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useState } from "react";
 import { redirect } from "next/navigation";
+// import { useSession } from "next-auth/react";
 
 const pages = ["Home"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function NavBar() {
+  // const userSession = useSession()
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 

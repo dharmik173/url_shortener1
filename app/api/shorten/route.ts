@@ -3,16 +3,21 @@ import { nanoid } from "nanoid";
 
 import { connectToDB } from "@/lib/mongodb";
 import { Url } from "@/models/Url";
-import { getUserFromToken } from "@/utils/common/getUserFromToken";
+// import { getUserFromToken } from "@/utils/common/getUserFromToken";
+import { getServerSession } from "next-auth";
+import { User } from "@/models/User";
 
 export async function POST(req: Request) {
   try {
     await connectToDB();
-    const { user, error, status } = await getUserFromToken();
-
-    if (error) {
-      return NextResponse.json({ message: error }, { status });
+    const userSession = await getServerSession()
+    console.log(userSession,'userSession')
+    const findUserdata = await User.findOne({email:userSession?.user?.email})
+    if(!findUserdata){
+      return NextResponse.json({ message: 'not valid user' }, { status:401 });
     }
+    // const { user, error, status } = await getUserFromToken();
+
 
     const { originalUrl } = await req.json();
 
@@ -34,7 +39,7 @@ export async function POST(req: Request) {
     const newUrl = new Url({
       originalUrl,
       shortUrl: shortCode,
-      userId: user?.data?._id,
+      userId: findUserdata?._id,
     });
     await newUrl.save();
 

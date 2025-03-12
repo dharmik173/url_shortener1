@@ -9,6 +9,9 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
+  // const userSession = useSession()
+
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await signIn("credentials", {
@@ -25,11 +28,11 @@ export default function Login() {
   };
 
   const handleGoogleLogin = async () => {
-    signIn("google", { callbackUrl: "/" });
+    signIn("google");
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen">
       <h2 className="text-2xl font-bold mb-4">Login</h2>
 
       {/* Email/Password Login */}
