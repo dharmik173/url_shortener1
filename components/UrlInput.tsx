@@ -4,7 +4,10 @@ import { Button, CardActions } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface ResponseDataType {
   shortUrl: string;
@@ -12,27 +15,42 @@ interface ResponseDataType {
 
 const UrlInput = () => {
   const urlRegex = /^(https?:\/\/)?[\w-]{2,}\.[\w-]{2,}.*$/;
-
+  const { data: session } = useSession();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const autoCreate = searchParams.get("autoCreate");
+  const longUrl = searchParams.get("longUrl");
   const [urlValue, setUrlValue] = useState<string>("");
   const [responseData, setResponseData] = useState<ResponseDataType | string>(
     ""
   );
-  const [btndisabled, setbtnDisabled] = useState<boolean>(true);
+  const [btndisabled, setBtnDisabled] = useState<boolean>(true);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isValidUrl = (url: string) => urlRegex.test(url);
     if (isValidUrl(e.target.value)) {
-      setbtnDisabled(false);
+      setBtnDisabled(false);
       setUrlValue(e.target.value);
       setResponseData("");
     } else {
-      setbtnDisabled(true);
+      setBtnDisabled(true);
       setUrlValue(e.target.value);
       setResponseData("");
     }
   };
 
-  const handleConvertLink = async () => {
+  const handleConvertLink = async (autoUrl: string) => {
+    if (!autoUrl.trim()) {
+      alert("Please enter a valid URL.");
+      return;
+    }
+    if (!session) {
+      signIn(undefined, {
+        callbackUrl: `/?autoCreate=true&longUrl=${autoUrl}`,
+      });
+      return;
+    }
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/shorten`,
@@ -41,19 +59,28 @@ const UrlInput = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ originalUrl: urlValue }),
+          body: JSON.stringify({ originalUrl: autoUrl }),
         }
       );
+
       const data = await res.json();
       if (data && data.statusCode === 201) {
         setUrlValue("");
-        setResponseData(data?.shortUrl);
-        setbtnDisabled(true);
+        setResponseData(data.shortUrl);
+        setBtnDisabled(true);
       }
     } catch (error) {
-      console.error("something went wrong" + error);
+      console.error("Something went wrong:", error);
     }
   };
+
+  useEffect(() => {
+    if (session && autoCreate && longUrl) {
+      console.log("hellooo");
+      handleConvertLink(decodeURIComponent(longUrl));
+      router.replace("/", undefined);
+    }
+  }, [session]);
 
   return (
     <div>
@@ -80,7 +107,9 @@ const UrlInput = () => {
             width: "100%",
           }}
           disabled={btndisabled}
-          onClick={handleConvertLink}
+          onClick={() => {
+            handleConvertLink(urlValue);
+          }}
         >
           Get your link for free
         </Button>
