@@ -70,7 +70,7 @@ const UrlInput = () => {
         className="bg-black w-full xl:w-1/2 rounded-xl mt-4"
         style={{
           opacity: btndisabled ? "0.6" : "1",
-          cursor: btndisabled ? "none" : "pointer",
+          cursor: btndisabled ? "initial" : "pointer",
         }}
       >
         <Button

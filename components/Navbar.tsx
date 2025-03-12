@@ -15,17 +15,21 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
-import { useState } from "react";
-import { redirect } from "next/navigation";
-// import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 const pages = ["Home"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function NavBar() {
-  // const userSession = useSession()
+  const router = useRouter();
+  const userSession = useSession();
+  const [userAuthenticated, setUserAuthenticated] = useState<boolean>(false);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -38,13 +42,37 @@ function NavBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = async (
+    e: React.MouseEvent<HTMLLIElement, MouseEvent>
+  ) => {
+    const target = e.target as HTMLElement;
+    if (target.textContent === "Logout") {
+      console.log("hellooo");
+      await signOut();
+    }
     setAnchorElUser(null);
   };
 
   const handleRouteChange = () => {
-    redirect("/");
+    router.push("/");
   };
+
+  const handleLogin = () => {
+    router.push("/login");
+  };
+
+  useEffect(() => {
+    if (userSession?.status === "loading") {
+      setIsLoading(true);
+    } else if (userSession?.status === "authenticated") {
+      setIsLoading(false);
+      setUserAuthenticated(true);
+      router.push("/");
+    } else if (userSession?.status === "unauthenticated") {
+      setIsLoading(false);
+      setUserAuthenticated(false);
+    }
+  }, [userSession]);
 
   return (
     <AppBar position="static">
@@ -55,7 +83,7 @@ function NavBar() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            onClick={() => router.push("/")}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -108,7 +136,7 @@ function NavBar() {
             variant="h5"
             noWrap
             component="a"
-            href="/"
+            onClick={() => router.push("/")}
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -133,39 +161,55 @@ function NavBar() {
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+          {userAuthenticated && !isLoading && (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting}
+                    onClick={(e) => {
+                      handleCloseUserMenu(e);
+                    }}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>
+                      {setting}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          )}
+          {!userAuthenticated && !isLoading && (
+            <div
+              className="bg-white p-2 text-black rounded-md cursor-pointer"
+              onClick={handleLogin}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
-                    {setting}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+              Login
+            </div>
+          )}
         </Toolbar>
       </Container>
+      {isLoading && <>Loading....</>}
     </AppBar>
   );
 }
