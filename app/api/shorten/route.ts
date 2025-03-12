@@ -11,7 +11,6 @@ export async function POST(req: Request) {
   try {
     await connectToDB();
     const userSession = await getServerSession()
-    console.log(userSession,'userSession')
     const findUserdata = await User.findOne({email:userSession?.user?.email})
     if(!findUserdata){
       return NextResponse.json({ message: 'not valid user' }, { status:401 });

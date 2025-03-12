@@ -3,7 +3,7 @@ import MediaCard from "@/components/Card";
 export default function Home() {
   return (
     <div className="items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
-      <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl my-0 mx-5">
+      <h1 className="font-bold text-3xl sm:text-5xl md:text-5xl my-0 mx-5">
         Build stronger digital connections
       </h1>
       <div className="text-xl sm:text-2xl m-4 sm:mx-16">

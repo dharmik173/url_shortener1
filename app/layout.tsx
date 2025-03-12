@@ -8,7 +8,11 @@ export const metadata: Metadata = {
     "Shorten long URLs with ease using our simple and fast URL Shortener. Generate short, shareable links in seconds, track recent URLs, and copy with one click",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <ClientLayout>{children}</ClientLayout>
