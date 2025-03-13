@@ -5,6 +5,8 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface ResponseDataType {
   shortUrl: string;
@@ -12,6 +14,9 @@ interface ResponseDataType {
 
 const UrlInput = () => {
   const urlRegex = /^(https?:\/\/)?[\w-]{2,}\.[\w-]{2,}.*$/;
+
+  const userSession = useSession();
+  const router = useRouter();
 
   const [urlValue, setUrlValue] = useState<string>("");
   const [responseData, setResponseData] = useState<ResponseDataType | string>(
@@ -34,6 +39,9 @@ const UrlInput = () => {
 
   const handleConvertLink = async () => {
     try {
+      if (userSession.status === "unauthenticated") {
+        return router.push("/login");
+      }
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/shorten`,
         {
