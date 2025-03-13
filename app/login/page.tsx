@@ -41,7 +41,10 @@ export default function Login() {
       <h2 className="text-2xl font-bold mb-4">Login</h2>
 
       {/* Email/Password Login */}
-      <form onSubmit={handleLogin} className="bg-white p-6 rounded shadow-md">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white p-6 rounded shadow-md m-2"
+      >
         <input
           type="email"
           placeholder="Email"

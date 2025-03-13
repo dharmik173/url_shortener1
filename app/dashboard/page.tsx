@@ -4,6 +4,7 @@ import { connectToDB } from "@/lib/mongodb";
 import { Url } from "@/models/Url";
 import { User } from "@/models/User";
 import UrlCard from "@/components/UrlCard";
+import Link from "next/link";
 
 type UrlDetail = {
   _id: string;
@@ -34,8 +35,12 @@ const DashboardPage = async () => {
 
   return (
     <div className="items-center justify-items-center font-[family-name:var(--font-geist-sans)]">
-      <div>
-        <button className="default btn-primary">Create link</button>
+      <div className="w-full flex justify-center items-center mr-8 mb-3">
+        <Link href="/">
+          <button className="default btn-primary p-4 rounded-md bg-white text-black text-lg mt-2">
+            Create Link
+          </button>
+        </Link>
       </div>
       <div className="w-full flex flex-col gap-6 px-10">
         {findUserAllLinks.length > 0 ? (
