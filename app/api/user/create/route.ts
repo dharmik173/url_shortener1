@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     const validation = validateUserInput(email, password);
     if (!validation.valid) {
       return NextResponse.json(
-        { message: validation.message },
+        { message: validation.message,statusCode:400 },
         { status: 400 }
       );
     }
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     const findEmail = await User.findOne({ email: email });
     if (findEmail) {
       return NextResponse.json(
-        { message: "User already exists" },
+        { message: "User already registered with us, please login!",statusCode:400 },
         { status: 409 }
       );
     }
