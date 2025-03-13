@@ -37,7 +37,7 @@ export default function Login() {
   }, [userSession]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center">
       <h2 className="text-2xl font-bold mb-4">Login</h2>
 
       {/* Email/Password Login */}
