@@ -1,30 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# URL Shortener
 
-## Getting Started
+A simple URL shortener web application built with Next.js, MongoDB, and NextAuth for authentication.
 
-First, run the development server:
+## Features
+- Shorten long URLs into short, easy-to-share links.
+- User authentication with NextAuth.
+- Dashboard to manage shortened URLs.
+- Click tracking and analytics.
 
-```bash
-pnpm dev
-```
+## Tech Stack
+- **Frontend:** Next.js (App Router)
+- **Backend:** API Routes in Next.js
+- **Database:** MongoDB
+- **Authentication:** NextAuth
+- **Styling:** Tailwind CSS
+- **Hosting:** Vercel
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
+- Node.js (>= 16)
+- MongoDB (local or Atlas)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/dharmik173/url_shortener1.git
+   
+   cd url-shortener
+   ```
 
-## Learn More
+2. Install dependencies:
+  
+   npm install
 
-To learn more about Next.js, take a look at the following resources:
+3. Set up environment variables in a `.env.local` file:
+   ```env
+   NEXT_PUBLIC_BASE_URL=''
+   GOOGLE_CLIENT_ID=''
+   GOOGLE_CLIENT_SECRET=''
+   NEXTAUTH_SECRET=''
+   JWT_SECRET=''
+   MONGODB_URI=''
+   NEXTAUTH_URL=''
+   NEXTAUTH_URL_INTERNAL=''
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Start the development server:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   npm run dev
 
-## Deploy on Vercel
+   The application will be running on `http://localhost:3000`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Usage
+- Sign in using the authentication method set up in NextAuth.
+- Enter a long URL and generate a short link.
+- Access the dashboard to manage your shortened URLs.
+- Share the short link and track its usage.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Future Improvements
+- Add custom alias support.
+- Implement QR code generation.
+- Improve analytics for link tracking.
+- Enhance UI/UX.
+
+
+## Author
+Developed by [Dharmik Shah](https://github.com/dharmik173).
+
