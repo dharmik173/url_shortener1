@@ -20,8 +20,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 
-const pages = ["Home"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const pages = ["Home", "dashboard"];
+const settings = ["Logout"];
 
 function NavBar() {
   const router = useRouter();
@@ -47,14 +47,17 @@ function NavBar() {
   ) => {
     const target = e.target as HTMLElement;
     if (target.textContent === "Logout") {
-      console.log("hellooo");
       await signOut();
     }
     setAnchorElUser(null);
   };
 
-  const handleRouteChange = () => {
-    router.push("/");
+  const handleRouteChange = (name: string) => {
+    if (name === "Home") {
+      router.push("/");
+    } else if (name === "dashboard") {
+      router.push("dashboard");
+    }
   };
 
   const handleLogin = () => {
@@ -67,7 +70,6 @@ function NavBar() {
     } else if (userSession?.status === "authenticated") {
       setIsLoading(false);
       setUserAuthenticated(true);
-      router.push("/");
     } else if (userSession?.status === "unauthenticated") {
       setIsLoading(false);
       setUserAuthenticated(false);
@@ -125,7 +127,7 @@ function NavBar() {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={() => handleRouteChange()}>
+                <MenuItem key={page} onClick={() => handleRouteChange(page)}>
                   <Typography sx={{ textAlign: "center" }}>{page}</Typography>
                 </MenuItem>
               ))}
@@ -154,7 +156,7 @@ function NavBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={() => handleRouteChange()}
+                onClick={() => handleRouteChange(page)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}

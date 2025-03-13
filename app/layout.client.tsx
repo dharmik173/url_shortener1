@@ -15,11 +15,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export default function ClientLayout({ children }: { children: React.ReactNode }) {
+export default function ClientLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <SessionProvider>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black h-screen overflow-hidden relative`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black h-full min-h-screen relative`}
       >
         {/* Particles Background */}
         <div className="absolute inset-0 -z-10 h-full w-full">
